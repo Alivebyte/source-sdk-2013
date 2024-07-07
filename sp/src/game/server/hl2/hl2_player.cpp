@@ -1393,7 +1393,8 @@ Activity CHL2_Player::Weapon_TranslateActivity( Activity baseAct, bool *pRequire
 	
 #if EXPANDED_HL2DM_ACTIVITIES
 	// +USE activities
-	if ( m_hUseEntity && player_use_anim_enabled.GetBool() )
+	// HACKHACK: Make sure m_hUseEntity is a pickup controller first
+	if ( m_hUseEntity && m_hUseEntity->ClassMatches("player_pickup") && player_use_anim_enabled.GetBool())
 	{
 		CBaseEntity* pHeldEnt = GetPlayerHeldEntity( this );
 		float flMass = pHeldEnt ?
@@ -1813,7 +1814,7 @@ bool CHL2_Player::CommanderFindGoal( commandgoal_t *pGoal )
 	// Get either our +USE entity or the gravity gun entity
 	CBaseEntity *pHeldEntity = GetPlayerHeldEntity(this);
 	if ( !pHeldEntity )
-		PhysCannonGetHeldEntity( GetActiveWeapon() );
+		pHeldEntity = PhysCannonGetHeldEntity( GetActiveWeapon() );
 
 	CTraceFilterSkipTwoEntities filter( this, pHeldEntity, COLLISION_GROUP_INTERACTIVE_DEBRIS );
 #else
